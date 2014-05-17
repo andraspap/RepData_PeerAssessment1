@@ -2,10 +2,12 @@
 
 
 ## Loading and preprocessing the data
-```{r}
+
+```r
 setwd("F:/Andras_work/Courses/Coursera/2013-14/B_SP-DS_05-05_ReproducibleResearch/Assignment1")
 data <- read.csv("activity.csv")
 ```
+
 
 
 ## What is mean total number of steps taken per day?
@@ -13,22 +15,42 @@ data <- read.csv("activity.csv")
 - Calculate and report the mean and median total number of steps taken per day
 
 
-```{r}
-stepsTotalPerDay <- tapply(data$steps,data$date,sum)
-hist(stepsTotalPerDay, breaks = 6, main = "Frequency of number of steps per day", xlab = "Number of steps per day", ylab = "Frequency", col="red")
 
-stepsMeanPerDay <- tapply(data$steps,data$date,mean,na.rm=T)
-#stepsMedianPerDay <- tapply(data$steps,data$date,median,na.rm=T)
+```r
+stepsTotalPerDay <- tapply(data$steps, data$date, sum)
+hist(stepsTotalPerDay, breaks = 6, main = "Frequency of number of steps per day", 
+    xlab = "Number of steps per day", ylab = "Frequency", col = "red")
 ```
+
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
+
+```r
+
+stepsMeanPerDay <- tapply(data$steps, data$date, mean, na.rm = T)
+# stepsMedianPerDay <- tapply(data$steps,data$date,median,na.rm=T)
+```
+
 
 Mean total number of steps taken per day:
-```{r}
-mean(stepsTotalPerDay, na.rm=T)
+
+```r
+mean(stepsTotalPerDay, na.rm = T)
 ```
+
+```
+## [1] 10766
+```
+
 Median total number of steps taken per day:
-```{r}
-median(stepsTotalPerDay, na.rm=T)
+
+```r
+median(stepsTotalPerDay, na.rm = T)
 ```
+
+```
+## [1] 10765
+```
+
 
 ## What is the average daily activity pattern?
 
@@ -36,14 +58,25 @@ median(stepsTotalPerDay, na.rm=T)
 - Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
 
-```{r}
-stepsMeanPerInterval <- tapply(data$steps,data$interval,mean,na.rm=T)
-plot(stepsMeanPerInterval, type="l", main=("Steps vs. Interval (daily average)"), ylab="# of steps")
+
+```r
+stepsMeanPerInterval <- tapply(data$steps, data$interval, mean, na.rm = T)
+plot(stepsMeanPerInterval, type = "l", main = ("Steps vs. Interval (daily average)"), 
+    ylab = "# of steps")
 ```
+
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
+
 Interval with the maximum number of steps:
-```{r}
-seq(along=stepsMeanPerInterval)[stepsMeanPerInterval == max(stepsMeanPerInterval)]
+
+```r
+seq(along = stepsMeanPerInterval)[stepsMeanPerInterval == max(stepsMeanPerInterval)]
 ```
+
+```
+## [1] 104
+```
+
 
 
 ## Imputing missing values
@@ -53,13 +86,21 @@ seq(along=stepsMeanPerInterval)[stepsMeanPerInterval == max(stepsMeanPerInterval
 - Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
 
 Number of missing data:
-```{r}
+
+```r
 sum(as.numeric(is.na(data$steps)))
+```
+
+```
+## [1] 2304
+```
+
+```r
 
 # Get the steps mean per interval as a vector
 tmp_stepsMeanPerInterval <- as.vector(stepsMeanPerInterval)
 # Repeat it to be the same for each of the 61 days
-tmp_stepsMeanPerInterval <- rep(tmp_stepsMeanPerInterval,61)
+tmp_stepsMeanPerInterval <- rep(tmp_stepsMeanPerInterval, 61)
 # Set it one where there is no missin data
 tmp_stepsMeanPerInterval[!is.na(data$steps)] = 1
 
@@ -72,27 +113,56 @@ data_NoMissing <- data
 data_NoMissing$steps <- tmp_stepsMeanPerInterval * tmp_dataTest
 
 
-#stepsMeanPerDay_NoMissing <- tapply(data_NoMissing$steps,data_NoMissing$date,mean,na.rm=T)
-#stepsMedianPerDay_NoMissing <- tapply(data_NoMissing$steps,data_NoMissing$date,median,na.rm=T)
+# stepsMeanPerDay_NoMissing <-
+# tapply(data_NoMissing$steps,data_NoMissing$date,mean,na.rm=T)
+# stepsMedianPerDay_NoMissing <-
+# tapply(data_NoMissing$steps,data_NoMissing$date,median,na.rm=T)
 
-stepsTotalPerDay_NoMissing <- tapply(data_NoMissing$steps,data_NoMissing$date,sum)
-hist(stepsTotalPerDay_NoMissing, breaks = 6, main = "Frequency of number of steps per day", xlab = "Number of steps per day", ylab = "Frequency", col="red")
-
-stepsMeanPerInterval_NoMissing <- tapply(data_NoMissing$steps,data_NoMissing$interval,mean)
+stepsTotalPerDay_NoMissing <- tapply(data_NoMissing$steps, data_NoMissing$date, 
+    sum)
+hist(stepsTotalPerDay_NoMissing, breaks = 6, main = "Frequency of number of steps per day", 
+    xlab = "Number of steps per day", ylab = "Frequency", col = "red")
 ```
+
+![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7.png) 
+
+```r
+
+stepsMeanPerInterval_NoMissing <- tapply(data_NoMissing$steps, data_NoMissing$interval, 
+    mean)
+```
+
 
 The impact of the missing data on histogram is that the number (i.e. frequency) of data in the middle of histogram has increased since number of new data with the mean has been added.
 
 Mean total number of steps taken per day (missing replaced by mean for that interval):
-```{r}
+
+```r
 mean(stepsTotalPerDay_NoMissing)
 ```
-Median total number of steps taken per day (missing replaced by mean for that interval):
-```{r}
-median(stepsTotalPerDay_NoMissing)
 
-plot(stepsMeanPerInterval_NoMissing, type="l",xlab="Interval",ylab="# of Steps", main="Steps vs. Interval (missing replaced with mean)")
 ```
+## [1] 10766
+```
+
+Median total number of steps taken per day (missing replaced by mean for that interval):
+
+```r
+median(stepsTotalPerDay_NoMissing)
+```
+
+```
+## [1] 10766
+```
+
+```r
+
+plot(stepsMeanPerInterval_NoMissing, type = "l", xlab = "Interval", ylab = "# of Steps", 
+    main = "Steps vs. Interval (missing replaced with mean)")
+```
+
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9.png) 
+
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
@@ -100,30 +170,36 @@ plot(stepsMeanPerInterval_NoMissing, type="l",xlab="Interval",ylab="# of Steps",
 
 - Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
 
-```{r}
+
+```r
 # Create a factor variable with two levels (weekday, weekend-day)
-tmpLT <- as.POSIXlt(data$date,format="%Y-%m-%d")
+tmpLT <- as.POSIXlt(data$date, format = "%Y-%m-%d")
 tmpWeekDays <- tmpLT$wday
 tmpWeekDays[tmpWeekDays == 0] = 0
 tmpWeekDays[tmpWeekDays == 6] = 0
 tmpWeekDays[tmpWeekDays != 0] = 1
-tmpWeekDaysFactor <- factor(tmpWeekDays, levels = c(0,1))
+tmpWeekDaysFactor <- factor(tmpWeekDays, levels = c(0, 1))
 # Add the factor variable to the data
 data$WD <- tmpWeekDaysFactor
 # Calculate the mean
-stepsMeanPerWeekday <- tapply(data$steps, list(data$interval,data$WD), mean, na.rm=T)
+stepsMeanPerWeekday <- tapply(data$steps, list(data$interval, data$WD), mean, 
+    na.rm = T)
 
-par(mfrow = c(2,1))	
+par(mfrow = c(2, 1))
 # Display the 2 plots
 with(data, {
-	par(mai=c(0,1,1,0))	
-	plot(stepsMeanPerWeekday[,1], type="l", main=("Steps vs. Interval"), xaxt='n', ylab="Week ends")
-	title=("# of Steps v.s. Interval")
-	par(mai=c(1,1,0,0))
-	plot(stepsMeanPerWeekday[,2], type="l",xlab="Interval",ylab="Week days")
-	
+    par(mai = c(0, 1, 1, 0))
+    plot(stepsMeanPerWeekday[, 1], type = "l", main = ("Steps vs. Interval"), 
+        xaxt = "n", ylab = "Week ends")
+    title = ("# of Steps v.s. Interval")
+    par(mai = c(1, 1, 0, 0))
+    plot(stepsMeanPerWeekday[, 2], type = "l", xlab = "Interval", ylab = "Week days")
+    
 })
 ```
+
+![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10.png) 
+
 
 
 
